@@ -4,10 +4,12 @@
 .vscode/
 .packages
 .pub/
+.dart_tool/
 build/
 ios/.generated/
 packages
 .flutter-plugins
+.flutter-plugins-dependencies
 ios/Flutter/flutter_export_environment.sh
 ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
