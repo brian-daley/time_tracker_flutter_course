@@ -8,8 +8,8 @@ class SocialSignInButton extends CustomRaisedButton {
     Color color,
     Color textColor,
     VoidCallback onPressed,
-  })  : assert(text != null),
-        assert(assetName != null),
+  })  : assert(assetName != null),
+        assert(text != null),
         super(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -17,15 +17,12 @@ class SocialSignInButton extends CustomRaisedButton {
               Image.asset(assetName),
               Text(
                 text,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 15,
-                ),
+                style: TextStyle(color: textColor, fontSize: 15.0),
               ),
               Opacity(
                 // TODO: HACK!
-                child: Image.asset(assetName),
                 opacity: 0.0,
+                child: Image.asset(assetName),
               ),
             ],
           ),
