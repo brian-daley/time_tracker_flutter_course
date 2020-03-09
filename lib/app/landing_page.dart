@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:time_tracker_flutter_course/app/home/home_page.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/sign_in_page.dart';
-import 'package:time_tracker_flutter_course/services/Auth.dart';
-
-import 'home_page.dart';
+import 'package:time_tracker_flutter_course/services/auth.dart';
+import 'package:time_tracker_flutter_course/services/database.dart';
 
 class LandingPage extends StatelessWidget {
-  final AuthBase auth;
-
-  LandingPage({@required this.auth});
-
+//  LandingPage({@required this.auth});
+//  final AuthBase auth;
 //  @override
 //  _LandingPageState createState() => _LandingPageState();
 //}
@@ -40,24 +39,21 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
     return StreamBuilder<User>(
-//        stream: widget.auth.onAuthStateChanged,
         stream: auth.onAuthStateChanged,
-//      initialData: ,
         builder: (context, snapshot) {
-          // snapshot.connectionState
-          //snapshot.hasError
           if (snapshot.connectionState == ConnectionState.active) {
             User user = snapshot.data;
             if (user == null) {
-              return SignInPage(
-                auth: auth,
-                //onSignIn: _updateUser,
-              );
+              return SignInPage.create(context);
             }
-            return HomePage(
-              auth: auth,
-              //onSignOut: () => _updateUser(null),
+            return Provider<User>.value(
+              value: user,
+              child: Provider<Database>(
+                create: (_) => FirestoreDatabase(uid: user.uid),
+                child: HomePage(),
+              ),
             );
           } else {
             return Scaffold(

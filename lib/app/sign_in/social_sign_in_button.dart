@@ -20,7 +20,6 @@ class SocialSignInButton extends CustomRaisedButton {
                 style: TextStyle(color: textColor, fontSize: 15.0),
               ),
               Opacity(
-                // TODO: HACK!
                 opacity: 0.0,
                 child: Image.asset(assetName),
               ),
