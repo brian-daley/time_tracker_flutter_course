@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:time_tracker_flutter_course/providers/phone.dart';
 
-enum Officer { President, VicePresident, Treasurer, Secretary }
-enum PlusOneType { Wife, Fiance, GirlFriend }
+import 'enums.dart';
 
 // TODO: How to handle committees?  enum or string?
 // TODO: how to handle saved and add hoc groups? favorite is not the answer.
@@ -17,7 +17,7 @@ class Member with ChangeNotifier implements Comparable<Member> {
   String state;
   String zipCode;
   int numOfPhones;
-  Map phones;
+  List<Phone> phones;
   DateTime birthday;
   String emailHost;
   String emailName;
@@ -25,7 +25,7 @@ class Member with ChangeNotifier implements Comparable<Member> {
   DateTime joinedClub;
   DateTime deceasedDate;
   Officer officer;
-  Map groups;
+  Set<String> groups;
   bool charterMember;
   bool deceased;
   bool fullMember;
@@ -70,6 +70,92 @@ class Member with ChangeNotifier implements Comparable<Member> {
       this.plusOneName,
       this.plusOneImageUrl});
 
+  factory Member.fromMap(Map<dynamic, dynamic> value, String id) {
+    return Member(
+      id: id,
+      first: trimToEmpty(value['first']),
+      middle: trimToEmpty(value['middle']),
+      last: trimToEmpty(value['last']),
+      suffix: trimToEmpty(value['suffix']),
+      address: trimToEmpty(value['address']),
+      city: trimToEmpty(value['city']),
+      state: trimToEmpty(value['state']),
+      zipCode: trimToEmpty(value['zipCode']),
+      numOfPhones: value['numOfPhones'],
+      phones: parsePhoneData(value),
+      birthday: stringToDateTime(value['birthday']),
+      emailHost: trimToEmpty(value['emailHost']),
+      emailName: trimToEmpty(value['emailName']),
+      imageUrl: trimToEmpty(value['imageUrl']),
+      joinedClub: stringToDateTime(value['joinedClub']),
+      deceasedDate: stringToDateTime(value['deceasedDate']),
+      officer: officerStringToEnum(value['officer']),
+      groups: parseGroupData(value),
+      charterMember: value['charterMember'],
+      deceased: value['deceased'],
+      fullMember: value['fullMember'],
+      probationaryMember: value['probationaryMember'],
+      over72Member: value['over72Member'],
+      associateMember: value['associateMember'],
+      mailedNewsLetter: value['mailedNewsLetter'],
+      favorite: value['favorite'],
+      plusOneType: plusOneStringToEnum(value['plusOneType']),
+      plusOneName: trimToEmpty(value['plusOneName']),
+      plusOneImageUrl: trimToEmpty(value['plusOneImageUrl']),
+    );
+  }
+
+//  Map<String, dynamic> toMap() {
+//    return <String, dynamic>{
+//      'jobId': jobId,
+//      'start': start.millisecondsSinceEpoch,
+//      'end': end.millisecondsSinceEpoch,
+//      'comment': comment,
+//    };
+//  }
+
+  static String trimToEmpty(String val) {
+    return (val == null ? '' : val.trim());
+  }
+
+  static String trimToNull(String val) {
+    return (val == null ? null : val.trim());
+  }
+
+  static DateTime stringToDateTime(String dt) {
+    if (dt == null) {
+      return null;
+    }
+    return DateTime.tryParse(dt);
+  }
+
+  static Set<String> parseGroupData(Map<dynamic, dynamic> value) {
+    return null;
+  }
+
+  static List<Phone> parsePhoneData(Map<dynamic, dynamic> value) {
+    final numOfPhones = value['numOfPhones'];
+    final Map<dynamic, dynamic> phoneMap = value['phones'];
+    final phones = List<Phone>();
+
+    for (var i = 1; i <= numOfPhones; i++) {
+      phones.add(Phone(
+        name: phoneMap['name$i'],
+        number: phoneMap['number$i'],
+        mobile: phoneMap['mobile$i'],
+      ));
+    }
+    return phones;
+  }
+
+  static Officer officerStringToEnum(String val) {
+    return null;
+  }
+
+  static PlusOneType plusOneStringToEnum(String val) {
+    return null;
+  }
+
   void toggleFavoriteStatus() {
     favorite = !favorite;
     notifyListeners();
@@ -91,9 +177,9 @@ class Member with ChangeNotifier implements Comparable<Member> {
     if (other == null) {
       return -1;
     }
-    if (this.last == null) {
+    if (this.id == null) {
       return 1;
     }
-    return this.last.compareTo(other.last);
+    return this.id.compareTo(other.id);
   }
 }

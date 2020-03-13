@@ -9,6 +9,7 @@ import 'package:time_tracker_flutter_course/app/home/jobs/job_list_tile.dart';
 import 'package:time_tracker_flutter_course/app/home/jobs/list_items_builder.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
 import 'package:time_tracker_flutter_course/common_widgets/platform_exception_alert_dialog.dart';
+import 'package:time_tracker_flutter_course/providers/member.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
 
 class JobsPage extends StatelessWidget {
@@ -53,9 +54,12 @@ class JobsPage extends StatelessWidget {
     var db = Provider.of<Database>(ctx);
     Future<QuerySnapshot> result = db.getData(path: '/members');
     result.then((value) {
+      var docs = value.documents;
       value.documents.forEach((element) {
+        // element is a DocumentSnapshot
         print('${element.documentID}');
         Map<String, dynamic> data = element.data;
+        Member member = Member.fromMap(data, element.documentID);
         data.forEach(
           (key, value) {
             print('$key = $value');
