@@ -1,3 +1,4 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/foundation.dart';
 import 'package:time_tracker_flutter_course/providers/phone.dart';
 
@@ -72,7 +73,7 @@ class Member with ChangeNotifier implements Comparable<Member> {
 
   factory Member.fromMap(Map<dynamic, dynamic> value, String id) {
     return Member(
-      id: id,
+      id: trimToNull(id),
       first: trimToEmpty(value['first']),
       middle: trimToEmpty(value['middle']),
       last: trimToEmpty(value['last']),
@@ -149,11 +150,11 @@ class Member with ChangeNotifier implements Comparable<Member> {
   }
 
   static Officer officerStringToEnum(String val) {
-    return null;
+    return EnumToString.fromString(Officer.values, val);
   }
 
   static PlusOneType plusOneStringToEnum(String val) {
-    return null;
+    return EnumToString.fromString(PlusOneType.values, val);
   }
 
   void toggleFavoriteStatus() {
